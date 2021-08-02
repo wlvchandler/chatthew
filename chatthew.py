@@ -7,13 +7,18 @@ client = discord.Client()
 #this can be more clever
 def is_chatthew_request(message):
     request = None
-    for r in ['chatthew,','Chatthew,','chatthew!', 'Chatthew!']:
-        if message.content.startswith(r):
+    for r in ['chatthew,','chatthew!']:
+        if message.content.lower().startswith(r):
             request = ' '.join(message.content.split()[1:])
     return request
 
 def process_request(request):
-    response = None
+    response = '' # can't return None
+    if request.lower() == 'trivia':
+        response = 'Hype likes:\na) ants\nb) feet\nc) filthy grandmother pornography\nd) a & b\ne) None of the above'
+    if request.lower() == 'simp':
+        response = ':pleading_face: :point_right: :point_left: is there anything my Queen needs'
+    return response
 
 @client.event
 async def on_ready():
