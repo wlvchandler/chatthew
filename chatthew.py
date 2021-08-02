@@ -2,35 +2,20 @@ import discord
 import os
 import re
 
-#from datetime import datetime
-#from threading import Timer
-
 client = discord.Client()
 
-# def set_reminder(content):
-#     time = ''
-#     if content[0] == 'daily':
-#         time = content[1:]
-#     return f'Setting reminder at {time}'
+#this can be more clever
+def is_chatthew_request(message):
+    request = None
+    for r in ['chatthew,','Chatthew,','chatthew!', 'Chatthew!']:
+        if message.content.startswith(r):
+            request = message.content.strip(r).strip()
+    return request
 
-class ChatthewResponse():
-    def __init__(self):
-        pass
-
-def parse_request(message):
-    pass
-
-def is_chattew_request(message):
-    # '(optional)greeting' chatthew (request)
-    chatthew_rgx = '^(.*)*(chatthew)(.*)$' #todo: something more clever without going into NLP
-    if re.match('', message.content, re.IGNORECASE):
-        return True
-    return False
-
-def process_request(message):
-    response = ChatthewResponse()
-    request = parse_message(message)
+def process_request(message, request):
+    await message.channel.send(f"request: {request}")
     
+
 @client.event
 async def on_ready():
     print('Logged in as {0.user}'.format(client))
@@ -40,7 +25,8 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-    if is_chatthew_request(message):
-        process_request(message)
+    request = is_chatthew_request(message)
+    if request:
+        process_request(message, request)
  
-client.run('TODO_TOKEN_HERE')
+client.run(os.getenv('TOKEN'))
