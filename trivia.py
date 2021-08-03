@@ -1,3 +1,4 @@
+from questions import questions
 
 class Trivia():
     def __init__(self):
