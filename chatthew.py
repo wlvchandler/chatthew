@@ -37,10 +37,17 @@ async def on_message(message):
         return
     request = is_chatthew_request(message)
     if request:
-        if request.lower() == 'meme':
+        req = request.split()
+        if req[0].lower() == 'meme':
             meme = random.choice(os.listdir("img/memes"))
             await message.channel.send(file=discord.File(open(f'img/memes/{meme}','rb')))
-            await message.channel.send('Is this a le funnie maeme?')  # add voting reactions
+        elif req[0].lower() == 'poll':
+            channel = ' '.join(req[1:])
+            await message.channel.send(f'[NOT FUNCTIONAL] Type your poll question for {channel}')
+            # TODO: get user response
+            # await message.channel.send('set poll options') # todo: separate by \n, autoassign emojis, custom emoji choice
+            # for e in ['👍', '👎']:
+            #     await poll.add_reaction(e)
         else:
             await message.channel.send(process_request(request))
 
