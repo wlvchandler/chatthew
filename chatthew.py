@@ -1,6 +1,7 @@
 import discord
 import os
 import re
+import random
 from fact import generate_fact
 
 client = discord.Client()
@@ -19,7 +20,7 @@ def process_request(request):
     subcommand = request.lower()
     if subcommand == 'trivia':
         response = 'Hype likes:\na) ants\nb) feet\nc) filthy grandmother pornography\nd) a & b\ne) None of the above'
-    elif subcommand == 'pun' or subcommand == 'ant-fact':
+    elif subcommand in ['pun','ant-fact']:
         response = generate_fact(subcommand)
     elif subcommand == 'simp':
         response = ':pleading_face: :point_right: :point_left: is there anything my Queen needs'
@@ -36,7 +37,12 @@ async def on_message(message):
         return
     request = is_chatthew_request(message)
     if request:
-        await message.channel.send(process_request(request))
+        if request.lower() == 'meme':
+            meme = random.choice(os.listdir("img/memes"))
+            await message.channel.send(file=discord.File(open(f'img/memes/{meme}','rb')))
+            await message.channel.send('Is this a le funnie maeme?')  # add voting reactions
+        else:
+            await message.channel.send(process_request(request))
 
 
 client.run(os.getenv('TOKEN'))
