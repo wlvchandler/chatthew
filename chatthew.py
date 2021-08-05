@@ -1,6 +1,7 @@
 import discord
 import os
 import re
+import random
 from fact import generate_fact
 from trivia import generate_question
 
@@ -22,7 +23,7 @@ def process_request(request):
     subcommand = request.lower()
     if subcommand == 'trivia':
         response = generate_question(subcommand)
-    elif subcommand == 'pun' or subcommand == 'ant-fact' or subcommand == 'lacroix':
+    elif subcommand in ['pun','ant-fact', 'lacroix']:
         response = generate_fact(subcommand)
     elif subcommand == 'simp':
         response = ':pleading_face: :point_right: :point_left: is there anything my Queen needs'
@@ -41,7 +42,19 @@ async def on_message(message):
         return
     request = is_chatthew_request(message)
     if request:
-        await message.channel.send(process_request(request))
+        req = request.split()
+        if req[0].lower() == 'meme':
+            meme = random.choice(os.listdir("img/memes"))
+            await message.channel.send(file=discord.File(open(f'img/memes/{meme}','rb')))
+        elif req[0].lower() == 'poll':
+            channel = ' '.join(req[1:])
+            await message.channel.send(f'[NOT FUNCTIONAL] Type your poll question for {channel}')
+            # TODO: get user response
+            # await message.channel.send('set poll options') # todo: separate by \n, autoassign emojis, custom emoji choice
+            # for e in ['👍', '👎']:
+            #     await poll.add_reaction(e)
+        else:
+            await message.channel.send(process_request(request))
 
 
 #client.run(os.getenv('TOKEN'))
