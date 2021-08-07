@@ -3,9 +3,12 @@ import os
 import re
 import random
 from fact import generate_fact
-from trivia import generate_question
+from trivia import generate_question, check_answer
 
 client = discord.Client()
+
+# stores info if someone is in the middle of something
+user_map = {}
 
 
 # this can be more clever
@@ -17,13 +20,16 @@ def is_chatthew_request(message):
     return request
 
 
-def process_request(request):
+def process_request(request, id):
     # TODO: make this a map?
     response = ''  # can't return None
     subcommand = request.lower()
     if subcommand == 'trivia':
-        response = generate_question(subcommand)
-    elif subcommand in ['pun','ant-fact', 'lacroix']:
+        response, question_id = generate_question(subcommand)
+        user_map[id] = {
+            'question_id': question_id
+        }
+    elif subcommand in ['pun', 'ant-fact', 'lacroix']:
         response = generate_fact(subcommand)
     elif subcommand == 'simp':
         response = ':pleading_face: :point_right: :point_left: is there anything my Queen needs'
@@ -43,7 +49,11 @@ async def on_message(message):
     request = is_chatthew_request(message)
     if request:
         req = request.split()
-        if req[0].lower() == 'meme':
+        if message.author.id in user_map:
+            answer = check_answer(req[0], user_map[message.author.id]['question_id'])
+            user_map.pop(message.author.id)
+            await message.channel.send(answer)
+        elif req[0].lower() == 'meme':
             meme = random.choice(os.listdir("img/memes"))
             await message.channel.send(file=discord.File(open(f'img/memes/{meme}','rb')))
         elif req[0].lower() == 'poll':
@@ -54,7 +64,7 @@ async def on_message(message):
             # for e in ['👍', '👎']:
             #     await poll.add_reaction(e)
         else:
-            await message.channel.send(process_request(request))
+            await message.channel.send(process_request(request, message.author.id))
 
 
 client.run(os.getenv('TOKEN'))

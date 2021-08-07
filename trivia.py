@@ -18,12 +18,17 @@ def get_options(question_dict):
 
 
 def get_answer(question_dict):
-    return '||{}||'.format(question_dict['A'])
+    return '{}'.format(question_dict['O'][question_dict['A']])
 
 
 def generate_question(subcommand):
-    question = random.choice(trivia_map[subcommand])
-    return get_question(question) + '\n' + str(get_options(question)) + '\n' + get_answer(question) + '\n'
+    index = random.choice(range(len(trivia_map[subcommand])))
+    question = trivia_map[subcommand][index]
+    return get_question(question) + '\n' + str(get_options(question)) + '\n', index
+
+
+def check_answer(answer, question):
+    return 'Correct Answer: {}'.format(get_answer(questions[question]))
 
 
 class Trivia():
