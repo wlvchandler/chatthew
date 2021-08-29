@@ -4,12 +4,14 @@ import re
 import random
 from fact import generate_fact
 from trivia import generate_question, check_answer
+from tatermanager import TaterManager
 
 client = discord.Client()
 
+tater_manager = TaterManager(client)
+
 # stores info if someone is in the middle of something
 user_map = {}
-
 
 # this can be more clever
 def is_chatthew_request(message):
@@ -35,9 +37,15 @@ def process_request(request, id):
         response = ':pleading_face: :point_right: :point_left: is there anything my Queen needs'
     return response
 
+@client.event
+async def on_member_update(before, after):
+    tater_manager.check_member(before, after)
+    # TODO: add tater management on joining?
 
 @client.event
 async def on_ready():
+    # TODO: add initial check of members for kick_list
+    # TODO: add flushing of the kick list after restart
     print('Logged in as {0.user}'.format(client))
     print('Alright alright alright... Chatthew in the house')
 
