@@ -2,8 +2,8 @@ import discord
 import os, sys
 import re
 import random
-from .fact import generate_fact
-from .trivia import generate_question, check_answer
+from .core.fact import generate_fact
+from .core.trivia import generate_question, check_answer
 
 # stores info if someone is in the middle of something
 user_map = {}
@@ -38,12 +38,9 @@ class Chatthew(discord.Client):
         elif subcommand == 'simp':
             response = ':pleading_face: :point_right: :point_left: is there anything my Queen needs'
         return response
-
     
     async def on_ready(self):
         print('Logged in as {0.user}'.format(self))
-        print('Alright alright alright... Chatthew in the house')
-
         
     async def on_message(self, message):
         if message.author == self.user:
