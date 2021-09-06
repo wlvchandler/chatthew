@@ -1,7 +1,7 @@
 import random
 import string
 
-from questions import questions
+from .questions import questions
 
 trivia_map = {
     'trivia': questions

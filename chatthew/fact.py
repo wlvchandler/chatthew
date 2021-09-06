@@ -1,8 +1,8 @@
 import random
 
-from puns import puns
-from ant_facts import ant_facts
-from lacroix import lacroix
+from .puns import puns
+from .ant_facts import ant_facts
+from .lacroix import lacroix
 
 fact_map = {
     'pun': puns,
