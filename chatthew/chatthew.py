@@ -4,6 +4,9 @@ import re
 import random
 from .core.fact import generate_fact
 from .core.trivia import generate_question, check_answer
+from .discord.tatermanager.tatermanager import TaterManager
+
+#tater_manager = TaterManager(client)
 
 # stores info if someone is in the middle of something
 user_map = {}
@@ -38,8 +41,15 @@ class Chatthew(discord.Client):
         elif subcommand == 'simp':
             response = ':pleading_face: :point_right: :point_left: is there anything my Queen needs'
         return response
-    
+
+    async def on_member_update(before, after):
+        return
+        #tater_manager.check_member(before, after)
+        # TODO: add tater management on joining?
+
     async def on_ready(self):
+        # TODO: add initial check of members for kick_list
+        # TODO: add flushing of the kick list after restart
         print('Logged in as {0.user}'.format(self))
         
     async def on_message(self, message):
